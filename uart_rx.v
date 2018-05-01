@@ -8,6 +8,7 @@
 // 
 // Set Parameter CLKS_PER_BIT as follows:
 // CLKS_PER_BIT = (Frequency of i_Clock)/(Frequency of UART)
+// CLKS_PER_BIT is clocks with every bit and correspondingly all bits of a byte are to be seen
 // Example: 10 MHz Clock, 115200 baud UART
 // (10000000)/(115200) = 87
   
@@ -57,7 +58,7 @@ module uart_rx
             r_Clock_Count <= 0;
             r_Bit_Index   <= 0;
              
-            if (r_Rx_Data == 1'b0)          // Start bit detected. When the falling edge is detected in data line
+            if (r_Rx_Data == 1'b0)          // Start bit detected in data line with falling edge
               r_SM_Main <= s_RX_START_BIT;
             else
               r_SM_Main <= s_IDLE;
@@ -70,7 +71,7 @@ module uart_rx
               begin
                 if (r_Rx_Data == 1'b0)
                   begin
-                    r_Clock_Count <= 0;  // reset counter, found the middle
+                    r_Clock_Count <= 0;  // reset counter, found the middle of the bit
                     r_SM_Main     <= s_RX_DATA_BITS;
                   end
                 else
@@ -93,9 +94,9 @@ module uart_rx
                 r_SM_Main     <= s_RX_DATA_BITS;
               end
             else         
-            begin
-            r_Clock_Count          <= 0;
-            r_Rx_Byte[r_Bit_Index] <= r_Rx_Data;
+              begin
+              r_Clock_Count          <= 0;          //confusing
+              r_Rx_Byte[r_Bit_Index] <= r_Rx_Data;
                     
         // Check if we have received all bits
             if (r_Bit_Index < 7)
@@ -108,7 +109,7 @@ module uart_rx
                     r_Bit_Index <= 0;
                     r_SM_Main   <= s_RX_STOP_BIT;
                 end                            
-            end      
+              end      
           end // case: s_RX_DATA_BITS
      
      

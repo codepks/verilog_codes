@@ -49,7 +49,7 @@ module uart_tx
             if (i_Tx_DV == 1'b1)
               begin
                 r_Tx_Active <= 1'b1;
-                r_Tx_Data   <= i_Tx_Byte;
+                r_Tx_Data   <= i_Tx_Byte; //from r_Rx_Byte
                 r_SM_Main   <= s_TX_START_BIT;
               end
             else
@@ -63,6 +63,7 @@ module uart_tx
             o_Tx_Serial <= 1'b0;
              
             // Wait CLKS_PER_BIT-1 clock cycles for start bit to finish
+            //start bit is not a required bit
             if (r_Clock_Count < CLKS_PER_BIT-1)
               begin
                 r_Clock_Count <= r_Clock_Count + 1;

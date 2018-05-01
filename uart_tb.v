@@ -35,7 +35,7 @@ module uart_tb ();
        
       // Send Start Bit
       r_Rx_Serial <= 1'b0;
-      #(c_BIT_PERIOD);
+      #(c_BIT_PERIOD); //time delay
       #1000;
        
        
